@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Questions</title>
+</head>
+<body>
+    <h1>Generate Questions</h1>
+    <form id="generate_questions_form" action="/process_and_generate_questions" method="post" enctype="multipart/form-data">
+        <input type="radio" id="upload_file" name="input_option" value="file" checked>
+        <label for="upload_file">Upload File:</label><br>
+        <input type="file" id="file_upload" name="input_file"><br><br>
+
+        <input type="radio" id="web_link" name="input_option" value="link">
+        <label for="web_link">Provide Web Link:</label><br>
+        <input type="url" id="web_link_input" name="input_link" disabled><br><br>
+
+        <input type="radio" id="input_text" name="input_option" value="text">
+        <label for="input_text">Input Text:</label><br>
+        <textarea id="input_text_area" name="input_text" rows="4" cols="50" maxlength="800" oninput="countWords()" disabled></textarea><br>
+        <span id="word_count">Word count: 0</span><br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <!-- JavaScript for word count and enabling/disabling input fields -->
+    <script>
+        function countWords() {
+            var text = document.getElementById('input_text_area').value;
+            var words = text.trim().split(/\s+/);
+            var wordCount = words.length;
+            document.getElementById('word_count').innerText = "Word count: " + wordCount;
+        }
+
+        // Function to enable/disable input fields based on the user's selection
+        function toggleInputFields() {
+            var uploadFile = document.getElementById('upload_file');
+            var webLink = document.getElementById('web_link');
+            var inputText = document.getElementById('input_text');
+            var fileUploadInput = document.getElementById('file_upload');
+            var webLinkInput = document.getElementById('web_link_input');
+            var textArea = document.getElementById('input_text_area');
+
+            if (uploadFile.checked) {
+                fileUploadInput.disabled = false;
+                webLinkInput.disabled = true;
+                textArea.disabled = true;
+            } else if (webLink.checked) {
+                fileUploadInput.disabled = true;
+                webLinkInput.disabled = false;
+                textArea.disabled = true;
+            } else if (inputText.checked) {
+                fileUploadInput.disabled = true;
+                webLinkInput.disabled = true;
+                textArea.disabled = false;
+            }
+        }
+
+        // Attach event listeners to radio buttons to toggle input fields
+        var radioButtons = document.querySelectorAll('input[type=radio][name=input_option]');
+        radioButtons.forEach(function(radioButton) {
+            radioButton.addEventListener('change', toggleInputFields);
+        });
+
+        // Call toggleInputFields initially to set the initial state
+        toggleInputFields();
+    </script>
+</body>
+</html>
